@@ -1,0 +1,12 @@
+services:
+  localstack:
+    container_name: localstack
+    image: localstack/localstack:3.6
+    ports:
+      - 4566:4566 # LocalStack Gateway
+      - 4510-4559:4510-4559 # External services
+    environment:
+      # LocalStack configuration: https://docs.localstack.cloud/references/configuration/
+      - DEBUG=1
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
