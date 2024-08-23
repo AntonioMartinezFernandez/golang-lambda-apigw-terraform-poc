@@ -34,3 +34,7 @@ stop-local:
   @rm deployments/terraform*
   @docker stop $(docker ps -a -q  --filter ancestor=localstack/localstack:3.6)
   @rm build/app.zip
+
+update-lambda:
+  @just zip
+  @aws --endpoint-url http://localhost:4566 lambda update-function-code --function-name api_golang_lambda --zip-file fileb://build/app.zip

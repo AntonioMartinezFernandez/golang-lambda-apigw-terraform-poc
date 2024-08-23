@@ -17,21 +17,21 @@ func NewHandler() *Handler {
 	return &Handler{}
 }
 
-// HelloWorld handler for Hello World request.
+// Hello handler for Hello request.
 func (h *Handler) Hello(c echo.Context) error {
-	c.Logger().Info("Hello World!")
-	return c.JSON(http.StatusOK, h.createResponse("Hello World!"))
+	c.Logger().Info("Hello!")
+	return c.JSON(http.StatusOK, h.jsonResponseWithMessage("Hello!"))
 }
 
-// YourNameRequest request for the YourName handler.
-type YourNameRequest struct {
+// SayMyName request for the SayMyName handler.
+type SayMyName struct {
 	Name string `json:"name"`
 }
 
 // YourName handlers for your name request.
 func (h *Handler) SayMyName(c echo.Context) error {
 	r := c.Request()
-	payload := YourNameRequest{}
+	payload := SayMyName{}
 	defer func() {
 		err := r.Body.Close()
 		if err != nil {
@@ -40,16 +40,16 @@ func (h *Handler) SayMyName(c echo.Context) error {
 	}()
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, h.createResponse("invalid request body provided"))
+		return c.JSON(http.StatusBadRequest, h.jsonResponseWithMessage("invalid request body provided"))
 	}
 	if payload.Name == "" {
-		return c.JSON(http.StatusBadRequest, h.createResponse("if you don't tell me I don't know your name"))
+		return c.JSON(http.StatusBadRequest, h.jsonResponseWithMessage("if you don't tell me I don't know your name"))
 	}
 
-	return c.JSON(http.StatusOK, h.createResponse(fmt.Sprintf("Your name is %s", payload.Name)))
+	return c.JSON(http.StatusOK, h.jsonResponseWithMessage(fmt.Sprintf("Your name is %s", payload.Name)))
 }
 
-func (h *Handler) createResponse(msg string) any {
+func (h *Handler) jsonResponseWithMessage(msg string) any {
 	return struct {
 		Message string `json:"message"`
 	}{

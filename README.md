@@ -9,6 +9,7 @@ Deploying Golang lambda and API Gateway in Localstack with Terraform
 3. [Docker Desktop](https://www.docker.com/products/docker-desktop/)
 4. [Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
 5. [Localstack](https://docs.localstack.cloud/user-guide/aws/feature-coverage/)
+6. [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
 ## Resources
 
