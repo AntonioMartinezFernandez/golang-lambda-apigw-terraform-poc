@@ -1,3 +1,5 @@
+.env
 app
+build/app
 build/app.zip
 deployments/*terraform*
