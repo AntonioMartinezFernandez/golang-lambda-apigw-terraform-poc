@@ -5,18 +5,22 @@ import (
 	"context"
 
 	"github.com/aws/aws-lambda-go/events"
-	lambdaEchoAdapter "github.com/awslabs/aws-lambda-go-api-proxy/echo"
+	aws_lambda_apiproxy_echo "github.com/awslabs/aws-lambda-go-api-proxy/echo"
+
+	"github.com/labstack/echo/v4"
 )
 
 // EchoHandler is the specific lambda handler for echo
 type EchoHandler struct {
-	lambdaEchoAdapter *lambdaEchoAdapter.EchoLambda
+	lambdaEchoAdapter *aws_lambda_apiproxy_echo.EchoLambda
 }
 
 // NewEchoHandler creates a new echo handler
-func NewEchoHandler(lambdaEchoAdapter *lambdaEchoAdapter.EchoLambda) *EchoHandler {
+func NewEchoHandler(e *echo.Echo) *EchoHandler {
+	awsLambdaApiproxyEcho := aws_lambda_apiproxy_echo.New(e)
+
 	return &EchoHandler{
-		lambdaEchoAdapter: lambdaEchoAdapter,
+		lambdaEchoAdapter: awsLambdaApiproxyEcho,
 	}
 }
 
