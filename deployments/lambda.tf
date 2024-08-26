@@ -7,9 +7,7 @@ resource "aws_lambda_function" "rest_api_golang_lambda" {
   timeout       = 30
 
   environment {
-    variables = {
-      foo = "bar"
-    }
+    variables = local.rest_api_golang_lambda_env_vars
   }
 }
 

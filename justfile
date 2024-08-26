@@ -29,11 +29,10 @@ terraform-teardown:
   @rm deployments/terraform*
 
 start-local:
-  @cp DEVELOPMENT.env .env
+  @cp .env.DEVELOPMENT .env
   @go run cmd/user-api/main.go -dev
 
 start-serverless:
-  @cp SERVERLESS.env .env
   @just zip-lambda
   @just start-infra
   @just terraform-deploy
