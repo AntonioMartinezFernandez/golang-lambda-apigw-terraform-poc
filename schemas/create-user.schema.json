@@ -1,0 +1,22 @@
+{
+  "$id": "create-user.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CreateUser",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "User id in ULID format"
+    },
+    "name": {
+      "type": "string",
+      "description": "User name"
+    },
+    "birthdate": {
+      "type": "string",
+      "description": "User birth date with format 1984-11-25 17:04:12"
+    }
+  },
+  "required": ["id", "name", "birthdate"],
+  "additionalProperties": false
+}

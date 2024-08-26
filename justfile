@@ -9,7 +9,7 @@ build:
 
 zip-lambda:
   @CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -o ./app ./cmd/user-api
-  @zip ./build/app.zip app
+  @zip ./build/app.zip app ./schemas/*
   @rm app
 
 start-infra:

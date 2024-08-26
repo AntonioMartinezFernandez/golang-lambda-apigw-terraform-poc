@@ -14,6 +14,10 @@ func RegisterUserRoutes(httpServices *di.HttpServices, commonServices *di.Common
 	httpServices.Router.Post(
 		"/user",
 		httpServices.DefaultRouteMatching,
-		NewPostUserHandler(*commonServices.CommandBus, httpServices.JsonApiResponseMiddleware),
+		NewPostUserHandler(
+			*commonServices.CommandBus,
+			httpServices.JsonApiResponseMiddleware,
+			commonServices.JsonSchemaValidator,
+		),
 	)
 }
