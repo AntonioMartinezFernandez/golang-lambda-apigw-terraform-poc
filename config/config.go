@@ -12,7 +12,8 @@ type Config struct {
 	AppEnv         string `env:"APP_ENV"`
 	AppVersion     string `env:"APP_VERSION"`
 
-	LogLevel string `env:"LOG_LEVEL"`
+	LogLevel           string `env:"LOG_LEVEL"`
+	JsonSchemaBasePath string `env:"JSON_SCHEMA_BASE_PATH"`
 
 	HttpPort         string `env:"HTTP_PORT"`
 	HttpReadTimeout  int    `env:"HTTP_READ_TIMEOUT"`

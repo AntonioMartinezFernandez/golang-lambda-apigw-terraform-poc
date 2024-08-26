@@ -8,6 +8,7 @@ import (
 
 	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/config"
 	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/bus"
+	json_schema "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/json-schema"
 	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/logger"
 	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/utils"
 )
@@ -17,17 +18,19 @@ type Repositories struct {
 }
 
 type CommonServices struct {
-	Config       config.Config
-	Logger       *slog.Logger
-	UlidProvider utils.UlidProvider
-	CommandBus   *bus.CommandBus
-	QueryBus     *bus.QueryBus
-	Repositories *Repositories
+	Config              config.Config
+	Logger              *slog.Logger
+	JsonSchemaValidator json_schema.JsonSchemaValidator
+	UlidProvider        utils.UlidProvider
+	CommandBus          *bus.CommandBus
+	QueryBus            *bus.QueryBus
+	Repositories        *Repositories
 }
 
 func Init() *CommonServices {
 	config := initConfig()
 	logger := logger.NewJsonLogger(config.LogLevel)
+	jsonSchemaValidator := json_schema.NewJsonSchemaValidator(config.JsonSchemaBasePath)
 	repositories := initRepositories()
 	ulidProvider := utils.NewRandomUlidProvider()
 	commandBus := bus.NewCommandBus()
@@ -36,12 +39,13 @@ func Init() *CommonServices {
 	RegisterBusHandlers(config, logger, repositories, ulidProvider, queryBus, commandBus)
 
 	return &CommonServices{
-		Config:       config,
-		Logger:       logger,
-		UlidProvider: ulidProvider,
-		CommandBus:   commandBus,
-		QueryBus:     queryBus,
-		Repositories: repositories,
+		Config:              config,
+		Logger:              logger,
+		JsonSchemaValidator: jsonSchemaValidator,
+		UlidProvider:        ulidProvider,
+		CommandBus:          commandBus,
+		QueryBus:            queryBus,
+		Repositories:        repositories,
 	}
 }
 
