@@ -27,7 +27,8 @@ func TestGetUserSuite(t *testing.T) {
 }
 
 func (suite *GetUserSuite) TestHandleGetUserRequest() {
-	// TODO: given a user saved in db...
+	userId := "01J64V13D4AHZ61T4MD7Z53BVZ"
+	suite.GivenUserWithId(userId)
 
 	// Make http request
 	response := suite.executeJsonRequest(

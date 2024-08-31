@@ -30,7 +30,7 @@ func TestSaveUserSuite(t *testing.T) {
 func (suite *SaveUserSuite) TestHandlePostUserRequest() {
 	userId := utils.NewUlid().String()
 	userName := helpers.RandomName()
-	userBirthdate := "1984-11-25 17:04:12"
+	userBirthdate := helpers.RandomTimeRFC3339()
 
 	requestBody := fmt.Sprintf(
 		`{"id": "%s","name": "%s","birthdate": "%s"}`,

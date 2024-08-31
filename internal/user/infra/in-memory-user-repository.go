@@ -23,6 +23,9 @@ func NewInMemoryUserRepository() *InMemoryUserRepository {
 
 func (ur *InMemoryUserRepository) Find(_ context.Context, id string) (*user_domain.User, error) {
 	user := ur.users[id]
+	if user.Id() == "" {
+		return nil, nil
+	}
 	return &user, nil
 }
 
