@@ -1,0 +1,115 @@
+openapi: 3.0.3
+info:
+  title: Swagger - OpenAPI 3.0
+  description: |-
+    golang-lambda-apigw-terraform-poc OpenAPI definition
+  contact:
+    email: antonio@weffective.com
+  version: 1.0.11
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: healthcheck
+    description: Service healthcheck
+  - name: user
+    description: Operations about user
+paths:
+  /healthcheck:
+    get:
+      tags:
+        - healthcheck
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      id:
+                        type: string
+                      attributes:
+                        type: object
+                        properties:
+                          service:
+                            type: string
+                          status:
+                            type: string
+        '500':
+          description: server Error
+  /user:
+    post:
+      tags:
+        - user
+      summary: Create user
+      description: This can only be done by the logged in user.
+      operationId: createUser
+      requestBody:
+        description: Created user object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: successful operation
+        '500':
+          description: server Error
+  /user/{id}:
+    get:
+      tags:
+        - user
+      summary: Get user by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      id:
+                        type: string
+                      attributes:
+                        $ref: '#/components/schemas/User'
+        '404':
+          description: user not found
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: ULID
+          example: "01J63630X372YYYR4CTFP1ZGGZ"
+        name:
+          type: string
+          format: string
+          example: "Miles Davis"
+        birthdate:
+          type: string
+          format: RFC3339
+          example: "1984-11-25T17:04:05Z"
