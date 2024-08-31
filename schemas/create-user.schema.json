@@ -14,7 +14,7 @@
     },
     "birthdate": {
       "type": "string",
-      "description": "User birth date with format 1984-11-25 17:04:12"
+      "description": "User birth date with time format RFC3339. Example: '1984-11-25T17:04:05Z'"
     }
   },
   "required": ["id", "name", "birthdate"],

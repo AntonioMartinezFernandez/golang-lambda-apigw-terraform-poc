@@ -14,13 +14,13 @@ import (
 )
 
 func TestSaveUserCommandHandler(t *testing.T) {
-	birthDate, _ := time.Parse("2006-01-02 15:04:05", "1984-11-25 17:04:12")
-	user := user_domain.NewUser("01J6J2VKXHR0A65AHG38J4RJB4", "John", birthDate)
+	birthDate, _ := time.Parse(time.RFC3339, "1984-12-30T17:04:05Z")
+	user := user_domain.NewUser("01J63630X372YYYR4CTFP1ZGGZ", "Lebron James", birthDate)
 	ctx := context.Background()
 
-	assert.Equal(t, user.Id(), "01J6J2VKXHR0A65AHG38J4RJB4")
-	assert.Equal(t, user.Name(), "John")
-	assert.Equal(t, user.Birthdate(), birthDate)
+	assert.Equal(t, user.Id(), "01J63630X372YYYR4CTFP1ZGGZ")
+	assert.Equal(t, user.Name(), "Lebron James")
+	assert.Equal(t, user.Birthdate().Format(time.RFC3339), birthDate.Format(time.RFC3339))
 
 	tests := map[string]struct {
 		expectations func(
@@ -58,12 +58,12 @@ func TestSaveUserCommandHandler(t *testing.T) {
 	for name, tst := range tests {
 		t.Run(name, func(t *testing.T) {
 			repo := user_domain_mocks.NewUserRepository(t)
-			ulidProvider := utils.NewFixedUlidProvider("01J6J2VKXHR0A65AHG38J4RJB4")
+			ulidProvider := utils.NewFixedUlidProvider("01J63630X372YYYR4CTFP1ZGGZ")
 			handler := user_application.NewSaveUserCommandHandler(repo, ulidProvider)
 
 			tst.expectations(repo, tst.user, tst.expectedError)
 
-			command := user_application.NewSaveUserCommand(user.Id(), user.Name(), user.Birthdate().Format("2006-01-02 15:04:05"))
+			command := user_application.NewSaveUserCommand(user.Id(), user.Name(), user.Birthdate().Format(time.RFC3339))
 			err := handler.Handle(command)
 
 			if tst.expectedError != nil {

@@ -14,7 +14,7 @@ import (
 )
 
 func TestFindUserQueryHandler(t *testing.T) {
-	birthDate, _ := time.Parse("2006-01-02 15:04:05", "1984-11-25 17:04:12")
+	birthDate, _ := time.Parse(time.RFC3339, "1984-11-25T17:04:05Z")
 	user := user_domain.NewUser("01J6J2VKXHR0A65AHG38J4RJB4", "John", birthDate)
 	ctx := context.Background()
 

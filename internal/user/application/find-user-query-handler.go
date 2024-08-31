@@ -30,6 +30,9 @@ func (guqh FindUserQueryHandler) Handle(query bus.Query) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
+	if user == nil {
+		return nil, nil
+	}
 
 	return *user, nil
 }

@@ -7,7 +7,7 @@ import (
 	user_infra "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/internal/user/infra"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 
-	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/config"
+	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/cmd/config"
 	dynamo_db "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/aws/dynamodb"
 	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/bus"
 	json_schema "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/json-schema"
@@ -36,11 +36,11 @@ func Init() *CommonServices {
 	config := initConfig()
 	logger := logger.NewJsonLogger(config.LogLevel)
 	jsonSchemaValidator := json_schema.NewJsonSchemaValidator(config.JsonSchemaBasePath)
-	repositories := initRepositories()
+	dynamoDbClient := dynamo_db.NewClient(config.AwsRegion, config.DynamoDbEndpoint, false)
+	repositories := initRepositories(dynamoDbClient)
 	ulidProvider := utils.NewRandomUlidProvider()
 	commandBus := bus.NewCommandBus()
 	queryBus := bus.NewQueryBus()
-	dynamoDbClient := dynamo_db.NewDynamoDbClient(config.AwsRegion, config.DynamoDbEndpoint)
 
 	RegisterBusHandlers(config, logger, repositories, ulidProvider, queryBus, commandBus)
 
@@ -60,9 +60,9 @@ func initConfig() config.Config {
 	return config.LoadEnvConfig()
 }
 
-func initRepositories() *Repositories {
+func initRepositories(dynamoDbClient *dynamodb.Client) *Repositories {
 	return &Repositories{
-		UserRepo: user_infra.NewInMemoryUserRepository(),
+		UserRepo: user_infra.NewDynamoDbUserRepository(dynamoDbClient),
 	}
 }
 

@@ -7,10 +7,17 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"sync"
+	"time"
 
 	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/cmd/di"
 	healthcheck_ui "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/internal/healthcheck/infra/ui"
+	user_domain "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/internal/user/domain"
 	user_ui "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/internal/user/infra/ui"
+	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/test/helpers"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 
 	"github.com/kinbiko/jsonassert"
 	"github.com/stretchr/testify/assert"
@@ -43,6 +50,7 @@ func (suite *IntegrationSuite) SetupSuite() {
 }
 
 func (suite *IntegrationSuite) SetupTest() {
+	suite.flushDb()
 	suite.ArrangeWg = &sync.WaitGroup{}
 }
 
@@ -50,6 +58,50 @@ func (suite *IntegrationSuite) TearDownTest() {
 }
 
 func (suite *IntegrationSuite) TearDownSuite() {
+}
+
+func (suite *IntegrationSuite) flushDb() {
+	suite.removeUsersDbTable()
+	suite.createUsersDbTable()
+}
+
+func (suite *IntegrationSuite) removeUsersDbTable() {
+	_, err := suite.CommonServices.DynamoDbClient.DeleteTable(suite.Ctx, &dynamodb.DeleteTableInput{
+		TableName: aws.String("users")})
+	if err != nil {
+		fmt.Printf("Couldn't delete table %v. Here's why: %v\n", "users", err)
+	}
+}
+
+func (suite *IntegrationSuite) createUsersDbTable() {
+	var tableDesc *types.TableDescription
+	table, err := suite.CommonServices.DynamoDbClient.CreateTable(suite.Ctx, &dynamodb.CreateTableInput{
+		AttributeDefinitions: []types.AttributeDefinition{{
+			AttributeName: aws.String("Id"),
+			AttributeType: types.ScalarAttributeTypeS,
+		}},
+		KeySchema: []types.KeySchemaElement{{
+			AttributeName: aws.String("Id"),
+			KeyType:       types.KeyTypeHash,
+		}},
+		TableName: aws.String("users"),
+		ProvisionedThroughput: &types.ProvisionedThroughput{
+			ReadCapacityUnits:  aws.Int64(5),
+			WriteCapacityUnits: aws.Int64(5),
+		},
+	})
+	if err != nil {
+		fmt.Printf("Couldn't create table %v. Here's why: %v\n", "users", err)
+	} else {
+		waiter := dynamodb.NewTableExistsWaiter(suite.CommonServices.DynamoDbClient)
+		err = waiter.Wait(context.TODO(), &dynamodb.DescribeTableInput{
+			TableName: aws.String("users")}, 5*time.Minute)
+		if err != nil {
+			fmt.Printf("Wait for table exists failed. Here's why: %v\n", err)
+		}
+		tableDesc = table.TableDescription
+	}
+	fmt.Println("DynamoDb table created: ", *tableDesc.TableName)
 }
 
 func (suite *IntegrationSuite) executeJsonRequest(verb string, path string, body []byte, headers map[string]string) *httptest.ResponseRecorder {
@@ -98,4 +150,9 @@ func (suite *IntegrationSuite) checkResponseCode(expected, actual int) {
 	if expected != actual {
 		suite.T().Errorf("Expected response code %d. Got %d\n", expected, actual)
 	}
+}
+
+func (suite *IntegrationSuite) GivenUserWithId(userId string) {
+	u := user_domain.NewUser(userId, helpers.RandomName(), time.Now())
+	suite.CommonServices.Repositories.UserRepo.Save(suite.Ctx, *u)
 }

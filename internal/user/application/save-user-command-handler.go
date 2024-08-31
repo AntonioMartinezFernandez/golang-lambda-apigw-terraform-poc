@@ -33,7 +33,7 @@ func (h SaveUserCommandHandler) Handle(c bus.Command) error {
 	cmdData := cmd.Data()
 	userId := cmdData["id"].(string)
 	userName := cmdData["name"].(string)
-	userBirthdate, err := time.Parse("2006-01-02 15:04:05", cmdData["birthdate"].(string))
+	userBirthdate, err := time.Parse(time.RFC3339, cmdData["birthdate"].(string))
 	if err != nil {
 		return err
 	}

@@ -29,6 +29,10 @@ func NewGetUserHandler(
 			responseMiddleware.WriteErrorResponse(w, []*jsonapi.ErrorObject{}, http.StatusInternalServerError, err)
 			return
 		}
+		if queryResponse == nil {
+			responseMiddleware.WriteErrorResponse(w, []*jsonapi.ErrorObject{}, http.StatusNotFound, err)
+			return
+		}
 
 		user, ok := queryResponse.(user_domain.User)
 		if !ok {

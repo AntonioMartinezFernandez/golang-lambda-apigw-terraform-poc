@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"path"
+	"time"
 
 	json_schema "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/json-schema"
 	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/utils"
@@ -44,6 +45,10 @@ func RandomInt() int {
 
 func RandomName() string {
 	return faker.Name()
+}
+
+func RandomTimeRFC3339() string {
+	return time.Now().Format(time.RFC3339)
 }
 
 func RandomIntOrNil() *int {

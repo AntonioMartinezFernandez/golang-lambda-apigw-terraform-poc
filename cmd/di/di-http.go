@@ -1,7 +1,7 @@
 package di
 
 import (
-	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/config"
+	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/cmd/config"
 	pkg_http "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/http"
 	http_middlewares "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/http/middleware"
 )

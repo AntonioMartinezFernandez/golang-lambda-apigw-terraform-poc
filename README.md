@@ -40,7 +40,7 @@ just start-local
 - Execute `curl -X GET [rest_api_gateway_base_url]/healthcheck`
   - Example: `curl -X GET http://ia58t50h0q.execute-api.localhost.localstack.cloud:4566/lambda/healthcheck`
 - Execute `curl -X POST -H 'Content-Type: application/json' -d '{"id":"01J63630X372YYYR4CTFP1ZGGZ","name":"Antonio"}' [rest_api_gateway_base_url]/user`
-  - Example: `curl -X POST -H 'Content-Type: application/json' -d '{"id":"01J63630X372YYYR4CTFP1ZGGZ","name":"Antonio", "birthdate":"1984-11-25 17:04:12"}' http://ia58t50h0q.execute-api.localhost.localstack.cloud:4566/lambda/user`
+  - Example: `curl -X POST -H 'Content-Type: application/json' -d '{"id":"01J63630X372YYYR4CTFP1ZGGZ","name":"Antonio", "birthdate":"1984-11-25T17:04:05Z"}' http://ia58t50h0q.execute-api.localhost.localstack.cloud:4566/lambda/user`
 - Execute `curl -X GET [rest_api_gateway_base_url]/user/[USER_ID]`
   - Example: `curl -X GET http://ia58t50h0q.execute-api.localhost.localstack.cloud:4566/lambda/user/01J63630X372YYYR4CTFP1ZGGZ`
 
@@ -53,6 +53,6 @@ just start-local
 - [Testing and Running Go API GW Lambdas Locally](https://boyter.org/posts/testing-running-api-gw-lambda-locally/)
 - [Serverless Applications with AWS Lambda and API Gateway](https://registry.terraform.io/providers/hashicorp/aws/2.34.0/docs/guides/serverless-with-aws-lambda-and-api-gateway)
 - [DynamoDB Developer Guide](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/SQLtoNoSQL.html)
-- [DynamoDB examples using SDK for Go V2](https://docs.aws.amazon.com/code-library/latest/ug/go_2_dynamodb_code_examples.html)
+- [DynamoDB examples using SDK for Go V2](https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/gov2/dynamodb/actions)
 - [DynamoDB Table Terraform module](https://registry.terraform.io/modules/terraform-aws-modules/dynamodb-table/aws/latest)
 - [DynamoDB Hash Key (Partition Key -PK-) and Range Key (Sort Key -SK-)](https://stackoverflow.com/questions/27329461/what-is-hash-and-range-primary-key)
