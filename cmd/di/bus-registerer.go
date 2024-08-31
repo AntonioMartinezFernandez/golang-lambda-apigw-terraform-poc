@@ -22,8 +22,8 @@ func RegisterBusHandlers(
 
 	// Register Queries
 	qb.Register(&healthcheck_application.GetHealthcheckQuery{}, healthcheck_application.NewGetHealthcheckQueryHandler(cnf.AppServiceName, ulidProvider))
-	qb.Register(&user_application.GetUserQuery{}, user_application.NewGetUserQueryHandler(repositories.UserRepo, ulidProvider))
+	qb.Register(&user_application.FindUserQuery{}, user_application.NewFindUserQueryHandler(repositories.UserRepo, ulidProvider))
 
 	// Register Commands
-	cb.Register(&user_application.SaveUserCommand{}, user_application.NewSaveUserCommandHandler(repositories.UserRepo))
+	cb.Register(&user_application.SaveUserCommand{}, user_application.NewSaveUserCommandHandler(repositories.UserRepo, ulidProvider))
 }
