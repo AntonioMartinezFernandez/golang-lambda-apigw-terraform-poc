@@ -6,7 +6,7 @@ import (
 	healthcheck_application "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/internal/healthcheck/application"
 	user_application "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/internal/user/application"
 
-	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/config"
+	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/cmd/config"
 	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/bus"
 	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/utils"
 )

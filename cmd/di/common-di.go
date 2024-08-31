@@ -7,7 +7,7 @@ import (
 	user_infra "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/internal/user/infra"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 
-	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/config"
+	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/cmd/config"
 	dynamo_db "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/aws/dynamodb"
 	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/bus"
 	json_schema "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/json-schema"
