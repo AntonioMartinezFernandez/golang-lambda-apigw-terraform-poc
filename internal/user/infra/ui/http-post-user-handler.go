@@ -13,31 +13,9 @@ import (
 	json_schema "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/json-schema"
 
 	"github.com/google/jsonapi"
-	"github.com/gorilla/mux"
 )
 
 const jsonSchema = "create-user.schema.json"
-
-func NewGetUserHandler(
-	queryBus bus.QueryBus,
-	responseMiddleware *http_middlewares.JsonApiResponseMiddleware,
-) http.HandlerFunc {
-
-	return func(w http.ResponseWriter, r *http.Request) {
-		vars := mux.Vars(r)
-		userId := vars["id"]
-
-		query := user_application.NewGetUserQuery(userId)
-		response, err := queryBus.Dispatch(query)
-		if err != nil {
-			responseMiddleware.WriteErrorResponse(w, []*jsonapi.ErrorObject{}, http.StatusInternalServerError, err)
-			return
-		}
-		getUserResponse := response.(user_application.GetUserResponse)
-
-		responseMiddleware.WriteResponse(w, &getUserResponse, http.StatusOK)
-	}
-}
 
 func NewPostUserHandler(
 	commandBus bus.CommandBus,

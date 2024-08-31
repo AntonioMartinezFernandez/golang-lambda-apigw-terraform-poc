@@ -1,6 +1,7 @@
 package user_application_test
 
 import (
+	"context"
 	"errors"
 	"testing"
 	"time"
@@ -12,9 +13,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetUserQueryHandler(t *testing.T) {
+func TestFindUserQueryHandler(t *testing.T) {
 	birthDate, _ := time.Parse("2006-01-02 15:04:05", "1984-11-25 17:04:12")
 	user := user_domain.NewUser("01J6J2VKXHR0A65AHG38J4RJB4", "John", birthDate)
+	ctx := context.Background()
 
 	assert.Equal(t, user.Id(), "01J6J2VKXHR0A65AHG38J4RJB4")
 	assert.Equal(t, user.Name(), "John")
@@ -35,7 +37,7 @@ func TestGetUserQueryHandler(t *testing.T) {
 				user *user_domain.User,
 				err error,
 			) {
-				repository.On("Find", "01J6J2VKXHR0A65AHG38J4RJB4").Return(user, nil).Once()
+				repository.On("Find", ctx, "01J6J2VKXHR0A65AHG38J4RJB4").Return(user, nil).Once()
 			},
 			user:          user,
 			expectedError: nil,
@@ -46,7 +48,7 @@ func TestGetUserQueryHandler(t *testing.T) {
 				user *user_domain.User,
 				err error,
 			) {
-				repository.On("Find", "01J6J2VKXHR0A65AHG38J4RJB4").Return(nil, err).Once()
+				repository.On("Find", ctx, "01J6J2VKXHR0A65AHG38J4RJB4").Return(nil, err).Once()
 			},
 			user:          nil,
 			expectedError: errors.New("repository error"),
@@ -57,11 +59,11 @@ func TestGetUserQueryHandler(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			repo := user_domain_mocks.NewUserRepository(t)
 			ulidProvider := utils.NewFixedUlidProvider("01J6J2VKXHR0A65AHG38J4RJB4")
-			handler := user_application.NewGetUserQueryHandler(repo, ulidProvider)
+			handler := user_application.NewFindUserQueryHandler(repo, ulidProvider)
 
 			tst.expectations(repo, tst.user, tst.expectedError)
 
-			query := user_application.NewGetUserQuery(user.Id())
+			query := user_application.NewFindUserQuery(user.Id())
 			queryResponse, err := handler.Handle(query)
 
 			if tst.expectedError != nil {
@@ -70,10 +72,10 @@ func TestGetUserQueryHandler(t *testing.T) {
 				return
 			}
 
-			getUserResponse := queryResponse.(user_application.GetUserResponse)
-			assert.Equal(t, getUserResponse.UserId, tst.user.Id())
-			assert.Equal(t, getUserResponse.Name, tst.user.Name())
-			assert.Equal(t, getUserResponse.BirthDate, tst.user.Birthdate().String())
+			castedQueryResponse := queryResponse.(user_domain.User)
+			assert.Equal(t, castedQueryResponse.Id(), tst.user.Id())
+			assert.Equal(t, castedQueryResponse.Name(), tst.user.Name())
+			assert.Equal(t, castedQueryResponse.Birthdate(), tst.user.Birthdate())
 
 			assert.NoError(t, err)
 		})

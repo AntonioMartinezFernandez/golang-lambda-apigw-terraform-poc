@@ -1,6 +1,7 @@
 package user_application_test
 
 import (
+	"context"
 	"errors"
 	"testing"
 	"time"
@@ -15,6 +16,7 @@ import (
 func TestSaveUserCommandHandler(t *testing.T) {
 	birthDate, _ := time.Parse("2006-01-02 15:04:05", "1984-11-25 17:04:12")
 	user := user_domain.NewUser("01J6J2VKXHR0A65AHG38J4RJB4", "John", birthDate)
+	ctx := context.Background()
 
 	assert.Equal(t, user.Id(), "01J6J2VKXHR0A65AHG38J4RJB4")
 	assert.Equal(t, user.Name(), "John")
@@ -35,7 +37,7 @@ func TestSaveUserCommandHandler(t *testing.T) {
 				user *user_domain.User,
 				err error,
 			) {
-				repository.On("Save", *user).Return(nil).Once()
+				repository.On("Save", ctx, *user).Return(nil).Once()
 			},
 			user:          user,
 			expectedError: nil,
@@ -46,7 +48,7 @@ func TestSaveUserCommandHandler(t *testing.T) {
 				user *user_domain.User,
 				err error,
 			) {
-				repository.On("Save", *user).Return(err).Once()
+				repository.On("Save", ctx, *user).Return(err).Once()
 			},
 			user:          user,
 			expectedError: errors.New("repository error"),

@@ -24,6 +24,7 @@ build:
 
 # Build app and zip binary and assets
 zip-lambda:
+  @go mod tidy
   @CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -o ./app ./cmd/user-api
   @zip ./build/app.zip app ./schemas/*
   @rm app
@@ -51,6 +52,7 @@ terraform-teardown:
 # Run app locally as independent service
 start-local:
   @cp .env.DEVELOPMENT .env
+  @go mod tidy
   @go run cmd/user-api/main.go
 
 # Run app locally as lambda

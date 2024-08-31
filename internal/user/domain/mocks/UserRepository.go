@@ -3,6 +3,8 @@
 package mocks
 
 import (
+	context "context"
+
 	user_domain "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/internal/user/domain"
 	mock "github.com/stretchr/testify/mock"
 )
@@ -12,9 +14,9 @@ type UserRepository struct {
 	mock.Mock
 }
 
-// Find provides a mock function with given fields: id
-func (_m *UserRepository) Find(id string) (*user_domain.User, error) {
-	ret := _m.Called(id)
+// Find provides a mock function with given fields: ctx, id
+func (_m *UserRepository) Find(ctx context.Context, id string) (*user_domain.User, error) {
+	ret := _m.Called(ctx, id)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Find")
@@ -22,19 +24,19 @@ func (_m *UserRepository) Find(id string) (*user_domain.User, error) {
 
 	var r0 *user_domain.User
 	var r1 error
-	if rf, ok := ret.Get(0).(func(string) (*user_domain.User, error)); ok {
-		return rf(id)
+	if rf, ok := ret.Get(0).(func(context.Context, string) (*user_domain.User, error)); ok {
+		return rf(ctx, id)
 	}
-	if rf, ok := ret.Get(0).(func(string) *user_domain.User); ok {
-		r0 = rf(id)
+	if rf, ok := ret.Get(0).(func(context.Context, string) *user_domain.User); ok {
+		r0 = rf(ctx, id)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*user_domain.User)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(string) error); ok {
-		r1 = rf(id)
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(ctx, id)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -42,17 +44,17 @@ func (_m *UserRepository) Find(id string) (*user_domain.User, error) {
 	return r0, r1
 }
 
-// Save provides a mock function with given fields: user
-func (_m *UserRepository) Save(user user_domain.User) error {
-	ret := _m.Called(user)
+// Save provides a mock function with given fields: ctx, user
+func (_m *UserRepository) Save(ctx context.Context, user user_domain.User) error {
+	ret := _m.Called(ctx, user)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Save")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(user_domain.User) error); ok {
-		r0 = rf(user)
+	if rf, ok := ret.Get(0).(func(context.Context, user_domain.User) error); ok {
+		r0 = rf(ctx, user)
 	} else {
 		r0 = ret.Error(0)
 	}

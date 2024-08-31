@@ -1,6 +1,7 @@
 package user_application
 
 import (
+	"context"
 	"time"
 
 	user_domain "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/internal/user/domain"
@@ -27,6 +28,8 @@ func (h SaveUserCommandHandler) Handle(c bus.Command) error {
 		return bus.NewInvalidDto("invalid save user command")
 	}
 
+	ctx := context.Background()
+
 	cmdData := cmd.Data()
 	userId := cmdData["id"].(string)
 	userName := cmdData["name"].(string)
@@ -37,5 +40,5 @@ func (h SaveUserCommandHandler) Handle(c bus.Command) error {
 
 	user := user_domain.NewUser(userId, userName, userBirthdate)
 
-	return h.userRepo.Save(*user)
+	return h.userRepo.Save(ctx, *user)
 }

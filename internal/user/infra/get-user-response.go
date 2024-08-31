@@ -1,4 +1,4 @@
-package user_application
+package user_infra
 
 type GetUserResponse struct {
 	Id        string `json:"id" jsonapi:"primary,id"`

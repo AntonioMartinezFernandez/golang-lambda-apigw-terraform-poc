@@ -1,6 +1,8 @@
 package user_domain
 
+import "context"
+
 type UserRepository interface {
-	Find(id string) (*User, error)
-	Save(user User) error
+	Find(ctx context.Context, id string) (*User, error)
+	Save(ctx context.Context, user User) error
 }

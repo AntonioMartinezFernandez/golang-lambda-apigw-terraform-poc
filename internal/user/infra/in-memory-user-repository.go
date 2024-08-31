@@ -1,6 +1,7 @@
 package user_infra
 
 import (
+	"context"
 	"time"
 
 	user_domain "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/internal/user/domain"
@@ -20,17 +21,18 @@ func NewInMemoryUserRepository() *InMemoryUserRepository {
 	return inMemoryUsersRepository
 }
 
-func (ur *InMemoryUserRepository) Find(id string) (*user_domain.User, error) {
+func (ur *InMemoryUserRepository) Find(_ context.Context, id string) (*user_domain.User, error) {
 	user := ur.users[id]
 	return &user, nil
 }
 
-func (ur *InMemoryUserRepository) Save(user user_domain.User) error {
+func (ur *InMemoryUserRepository) Save(_ context.Context, user user_domain.User) error {
 	ur.users[user.Id()] = user
 	return nil
 }
 
 func createSomeExampleUsers(imur *InMemoryUserRepository) {
+	ctx := context.Background()
 	exampleUsers := []user_domain.User{
 		*user_domain.NewUser("01J64TS9923K5WS395CFE1AP25", "Duke Ellington", time.Now()),
 		*user_domain.NewUser("01J64TSVKMNEJN1C0R1J15QZDB", "Charlie Parker", time.Now()),
@@ -40,6 +42,6 @@ func createSomeExampleUsers(imur *InMemoryUserRepository) {
 	}
 
 	for _, user := range exampleUsers {
-		imur.Save(user)
+		imur.Save(ctx, user)
 	}
 }

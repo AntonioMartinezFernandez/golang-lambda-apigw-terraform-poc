@@ -18,6 +18,10 @@ type Config struct {
 	HttpPort         string `env:"HTTP_PORT"`
 	HttpReadTimeout  int    `env:"HTTP_READ_TIMEOUT"`
 	HttpWriteTimeout int    `env:"HTTP_WRITE_TIMEOUT"`
+
+	AwsRegion string `env:"AWS_REGION"`
+
+	DynamoDbEndpoint string `env:"DYNAMO_DB_ENDPOINT"`
 }
 
 func LoadEnvConfig() Config {
