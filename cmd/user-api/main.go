@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 
 	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/cmd/di"
@@ -15,11 +14,6 @@ import (
 )
 
 func main() {
-	// CLI flags
-	var devMode bool
-	flag.BoolVar(&devMode, "dev", false, "Define if the application is in development mode")
-	flag.Parse()
-
 	// Init Dependency Injection
 	commonServices := di.Init()
 	httpServices := di.InitHttpServices(commonServices)
@@ -33,9 +27,9 @@ func main() {
 	healthcheck_ui.RegisterHealthcheckRoutes(httpServices, commonServices)
 	user_ui.RegisterUserRoutes(httpServices, commonServices)
 
-	// Define the execution mode
-	switch devMode {
-	case true:
+	// 🪄 Define the execution mode
+	switch commonServices.Config.AppEnv {
+	case "development":
 		// Start as independent service
 		httpServerStarterError := httpServices.Router.
 			ListenAndServe(fmt.Sprintf("%s:%v", "0.0.0.0", commonServices.Config.HttpPort))
@@ -43,7 +37,7 @@ func main() {
 			commonServices.Logger.Error("error starting http server", "error", httpServerStarterError)
 			panic("error starting http server")
 		}
-	case false:
+	default:
 		// Start as lambda function
 		lambdaGorillaMuxHandler := lambda_proxy.NewGorillaMuxHandler(httpServices.Router.GetMuxRouter())
 		aws_lambda.Start(lambdaGorillaMuxHandler.Handle)

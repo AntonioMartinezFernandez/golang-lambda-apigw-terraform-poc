@@ -22,8 +22,8 @@ Deploying AWS Lambda (Golang) and API Gateway in local environment with Terrafor
 
 ## Serverless infra deployment
 
-- `just start-serverless`
-- Take the `rest_api_gateway_base_url` from the terraform output when the deploy ends
+- Run `just start-serverless`
+- Take the `rest_api_gateway_base_url` value from terraform output when the deploy ends
 - `curl -X GET [rest_api_gateway_base_url]/healthcheck`
   - Example: `curl -X GET http://ia58t50h0q.execute-api.localhost.localstack.cloud:4566/lambda/healthcheck`
 - `curl -X POST -H 'Content-Type: application/json' -d '{"id":"01J63630X372YYYR4CTFP1ZGGZ","name":"Antonio"}' [rest_api_gateway_base_url]/user`

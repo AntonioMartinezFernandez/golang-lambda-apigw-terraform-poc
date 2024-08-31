@@ -11,6 +11,8 @@ import (
 	json_schema "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/json-schema"
 	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/logger"
 	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/utils"
+
+	"github.com/joho/godotenv"
 )
 
 type Repositories struct {
@@ -57,4 +59,13 @@ func initRepositories() *Repositories {
 	return &Repositories{
 		UserRepo: user_infra.NewInMemoryUserRepository(),
 	}
+}
+
+func InitWithEnvFile(envFiles ...string) *CommonServices {
+	err := godotenv.Overload(envFiles...)
+	if err != nil {
+		panic(err)
+	}
+
+	return Init()
 }

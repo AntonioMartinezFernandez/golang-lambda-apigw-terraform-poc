@@ -25,5 +25,5 @@ func RegisterBusHandlers(
 	qb.Register(&user_application.GetUserQuery{}, user_application.NewGetUserQueryHandler(repositories.UserRepo, ulidProvider))
 
 	// Register Commands
-	cb.Register(&user_application.SaveUserCommand{}, user_application.NewSaveUserCommandHandler(repositories.UserRepo))
+	cb.Register(&user_application.SaveUserCommand{}, user_application.NewSaveUserCommandHandler(repositories.UserRepo, ulidProvider))
 }

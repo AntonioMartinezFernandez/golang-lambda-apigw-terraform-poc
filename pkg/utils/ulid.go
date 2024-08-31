@@ -60,8 +60,11 @@ type FixedUlidProvider struct {
 	ulid Ulid
 }
 
-func NewFixedUlidProvider() *FixedUlidProvider {
-	return &FixedUlidProvider{}
+func NewFixedUlidProvider(ulid string) *FixedUlidProvider {
+	u, _ := UlidFromString(ulid)
+	return &FixedUlidProvider{
+		ulid: u,
+	}
 }
 
 func (up *FixedUlidProvider) New() Ulid {

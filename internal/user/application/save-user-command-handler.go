@@ -6,15 +6,18 @@ import (
 	user_domain "github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/internal/user/domain"
 
 	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/bus"
+	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/utils"
 )
 
 type SaveUserCommandHandler struct {
-	userRepo user_domain.UserRepository
+	userRepo     user_domain.UserRepository
+	ulidProvider utils.UlidProvider
 }
 
-func NewSaveUserCommandHandler(userRepo user_domain.UserRepository) SaveUserCommandHandler {
+func NewSaveUserCommandHandler(userRepo user_domain.UserRepository, ulidProvider utils.UlidProvider) SaveUserCommandHandler {
 	return SaveUserCommandHandler{
-		userRepo: userRepo,
+		userRepo:     userRepo,
+		ulidProvider: ulidProvider,
 	}
 }
 
