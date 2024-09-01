@@ -1,7 +1,6 @@
 package test
 
 import (
-	"fmt"
 	"net/http"
 	"testing"
 
@@ -31,15 +30,16 @@ func (suite *GetUserSuite) TestHandleGetUserRequest() {
 	suite.GivenUserWithId(userId)
 
 	// Make http request
-	response := suite.executeJsonRequest(
+	response := suite.ExecuteJsonRequest(
 		http.MethodGet,
 		"/users/01J64V13D4AHZ61T4MD7Z53BVZ",
 		nil,
 		helpers.EmptyHeaders(),
 	)
 
-	// TODO: check the response body values
-	fmt.Println("==> Response Body: ", response.Body)
-
-	suite.checkResponseCode(http.StatusOK, response.Code)
+	suite.CheckResponse(
+		http.StatusOK,
+		`{"data":{"type":"id","id":"01J64V13D4AHZ61T4MD7Z53BVZ","attributes":{"birthdate":"<<PRESENCE>>","id":"01J64V13D4AHZ61T4MD7Z53BVZ","name":"<<PRESENCE>>"}}}`,
+		response,
+	)
 }

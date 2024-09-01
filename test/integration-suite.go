@@ -50,7 +50,7 @@ func (suite *IntegrationSuite) SetupSuite() {
 }
 
 func (suite *IntegrationSuite) SetupTest() {
-	suite.flushDb()
+	suite.FlushDb()
 	suite.ArrangeWg = &sync.WaitGroup{}
 }
 
@@ -60,16 +60,16 @@ func (suite *IntegrationSuite) TearDownTest() {
 func (suite *IntegrationSuite) TearDownSuite() {
 }
 
-func (suite *IntegrationSuite) flushDb() {
-	suite.removeUsersDbTable()
+func (suite *IntegrationSuite) FlushDb() {
+	suite.removeDbTable("users")
 	suite.createUsersDbTable()
 }
 
-func (suite *IntegrationSuite) removeUsersDbTable() {
+func (suite *IntegrationSuite) removeDbTable(table string) {
 	_, err := suite.CommonServices.DynamoDbClient.DeleteTable(suite.Ctx, &dynamodb.DeleteTableInput{
-		TableName: aws.String("users")})
+		TableName: aws.String(table)})
 	if err != nil {
-		fmt.Printf("Couldn't delete table %v. Here's why: %v\n", "users", err)
+		fmt.Printf("Couldn't delete table %v. Here's why: %v\n", table, err)
 	}
 }
 
@@ -104,7 +104,7 @@ func (suite *IntegrationSuite) createUsersDbTable() {
 	fmt.Println("DynamoDb table created: ", *tableDesc.TableName)
 }
 
-func (suite *IntegrationSuite) executeJsonRequest(verb string, path string, body []byte, headers map[string]string) *httptest.ResponseRecorder {
+func (suite *IntegrationSuite) ExecuteJsonRequest(verb string, path string, body []byte, headers map[string]string) *httptest.ResponseRecorder {
 	req, err := http.NewRequest(verb, path, bytes.NewBuffer(body))
 	if len(headers) != 0 {
 		for headerName, value := range headers {
@@ -115,10 +115,10 @@ func (suite *IntegrationSuite) executeJsonRequest(verb string, path string, body
 	assert.NoError(suite.T(), err)
 
 	req.Header.Set("Content-Type", "application/json")
-	return suite.executeRequest(req)
+	return suite.ExecuteRequest(req)
 }
 
-func (suite *IntegrationSuite) executeRequest(req *http.Request) *httptest.ResponseRecorder {
+func (suite *IntegrationSuite) ExecuteRequest(req *http.Request) *httptest.ResponseRecorder {
 	rr := httptest.NewRecorder()
 
 	if routerHandler == nil {
@@ -130,9 +130,9 @@ func (suite *IntegrationSuite) executeRequest(req *http.Request) *httptest.Respo
 	return rr
 }
 
-func (suite *IntegrationSuite) checkResponse(expectedStatusCode int, expectedResponse string, response *httptest.ResponseRecorder, formats ...interface{}) {
+func (suite *IntegrationSuite) CheckResponse(expectedStatusCode int, expectedResponse string, response *httptest.ResponseRecorder, formats ...interface{}) {
 	ja := jsonassert.New(suite.T())
-	suite.checkResponseCode(expectedStatusCode, response.Code)
+	suite.CheckResponseCode(expectedStatusCode, response.Code)
 
 	receivedResponse := response.Body.String()
 	if receivedResponse == "" {
@@ -146,7 +146,7 @@ func (suite *IntegrationSuite) checkResponse(expectedStatusCode int, expectedRes
 	}
 }
 
-func (suite *IntegrationSuite) checkResponseCode(expected, actual int) {
+func (suite *IntegrationSuite) CheckResponseCode(expected, actual int) {
 	if expected != actual {
 		suite.T().Errorf("Expected response code %d. Got %d\n", expected, actual)
 	}
@@ -155,4 +155,16 @@ func (suite *IntegrationSuite) checkResponseCode(expected, actual int) {
 func (suite *IntegrationSuite) GivenUserWithId(userId string) {
 	u := user_domain.NewUser(userId, helpers.RandomName(), time.Now())
 	suite.CommonServices.Repositories.UserRepo.Save(suite.Ctx, *u)
+}
+
+func (suite *IntegrationSuite) CheckUserExists(userId string) {
+	u, err := suite.CommonServices.Repositories.UserRepo.Find(suite.Ctx, userId)
+	assert.NoError(suite.T(), err)
+	assert.NotNil(suite.T(), u)
+}
+
+func (suite *IntegrationSuite) CheckUserNotExists(userId string) {
+	u, err := suite.CommonServices.Repositories.UserRepo.Find(suite.Ctx, userId)
+	assert.NoError(suite.T(), err)
+	assert.Nil(suite.T(), u)
 }

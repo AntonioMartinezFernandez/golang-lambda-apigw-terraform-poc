@@ -40,14 +40,13 @@ func (suite *UpdateUserSuite) TestHandlePatchUserRequest() {
 		userBirthdate,
 	)
 
-	response := suite.executeJsonRequest(
+	response := suite.ExecuteJsonRequest(
 		http.MethodPatch,
 		"/users",
 		[]byte(requestBody),
 		helpers.EmptyHeaders(),
 	)
 
-	suite.checkResponse(http.StatusNoContent, "", response)
-
-	// TODO: check user saved in db
+	suite.CheckResponseCode(http.StatusNoContent, response.Code)
+	suite.CheckUserExists(userId)
 }

@@ -27,12 +27,16 @@ func TestGetHealthcheckSuite(t *testing.T) {
 
 func (suite *GetHealthcheckSuite) TestHandleGetHealthcheckRequest() {
 	// Make http request
-	response := suite.executeJsonRequest(
+	response := suite.ExecuteJsonRequest(
 		http.MethodGet,
 		"/healthcheck",
 		nil,
 		helpers.EmptyHeaders(),
 	)
 
-	suite.checkResponseCode(200, response.Code)
+	suite.CheckResponse(
+		http.StatusOK,
+		`{"data":{"type":"healthcheck","id":"<<PRESENCE>>","attributes":{"service":"rest_api_golang_lambda","status":"OK"}}}`,
+		response,
+	)
 }
