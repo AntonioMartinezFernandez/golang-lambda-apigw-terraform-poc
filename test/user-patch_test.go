@@ -5,30 +5,31 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/pkg/utils"
 	"github.com/AntonioMartinezFernandez/golang-lambda-apigw-terraform-poc/test/helpers"
 
 	"github.com/stretchr/testify/suite"
 )
 
-type SaveUserSuite struct {
+type UpdateUserSuite struct {
 	IntegrationSuite
 }
 
-func (suite *SaveUserSuite) SetupSuite() {
+func (suite *UpdateUserSuite) SetupSuite() {
 	suite.IntegrationSuite.SetupSuite()
 }
 
-func (suite *SaveUserSuite) SetupTest() {
+func (suite *UpdateUserSuite) SetupTest() {
 	suite.IntegrationSuite.SetupTest()
 }
 
-func TestSaveUserSuite(t *testing.T) {
-	suite.Run(t, new(SaveUserSuite))
+func TestUpdateUserSuite(t *testing.T) {
+	suite.Run(t, new(UpdateUserSuite))
 }
 
-func (suite *SaveUserSuite) TestHandlePostUserRequest() {
-	userId := utils.NewUlid().String()
+func (suite *UpdateUserSuite) TestHandlePatchUserRequest() {
+	userId := "01J64V13D4AHZ61T4MD7Z53BVZ"
+	suite.GivenUserWithId(userId)
+
 	userName := helpers.RandomName()
 	userBirthdate := helpers.RandomTimeRFC3339()
 
@@ -40,13 +41,13 @@ func (suite *SaveUserSuite) TestHandlePostUserRequest() {
 	)
 
 	response := suite.executeJsonRequest(
-		http.MethodPost,
+		http.MethodPatch,
 		"/users",
 		[]byte(requestBody),
 		helpers.EmptyHeaders(),
 	)
 
-	suite.checkResponse(http.StatusCreated, "", response)
+	suite.checkResponse(http.StatusNoContent, "", response)
 
 	// TODO: check user saved in db
 }

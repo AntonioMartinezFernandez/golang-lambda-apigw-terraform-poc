@@ -14,6 +14,24 @@ type UserRepository struct {
 	mock.Mock
 }
 
+// Delete provides a mock function with given fields: ctx, id
+func (_m *UserRepository) Delete(ctx context.Context, id string) error {
+	ret := _m.Called(ctx, id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Delete")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, string) error); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // Find provides a mock function with given fields: ctx, id
 func (_m *UserRepository) Find(ctx context.Context, id string) (*user_domain.User, error) {
 	ret := _m.Called(ctx, id)
@@ -50,6 +68,24 @@ func (_m *UserRepository) Save(ctx context.Context, user user_domain.User) error
 
 	if len(ret) == 0 {
 		panic("no return value specified for Save")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, user_domain.User) error); ok {
+		r0 = rf(ctx, user)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// Update provides a mock function with given fields: ctx, user
+func (_m *UserRepository) Update(ctx context.Context, user user_domain.User) error {
+	ret := _m.Called(ctx, user)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Update")
 	}
 
 	var r0 error
