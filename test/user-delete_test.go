@@ -1,7 +1,6 @@
 package test
 
 import (
-	"fmt"
 	"net/http"
 	"testing"
 
@@ -10,36 +9,35 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-type GetUserSuite struct {
+type DeleteUserSuite struct {
 	IntegrationSuite
 }
 
-func (suite *GetUserSuite) SetupSuite() {
+func (suite *DeleteUserSuite) SetupSuite() {
 	suite.IntegrationSuite.SetupSuite()
 }
 
-func (suite *GetUserSuite) SetupTest() {
+func (suite *DeleteUserSuite) SetupTest() {
 	suite.IntegrationSuite.SetupTest()
 }
 
-func TestGetUserSuite(t *testing.T) {
-	suite.Run(t, new(GetUserSuite))
+func TestDeleteUserSuite(t *testing.T) {
+	suite.Run(t, new(DeleteUserSuite))
 }
 
-func (suite *GetUserSuite) TestHandleGetUserRequest() {
+func (suite *DeleteUserSuite) TestHandleDeleteUserRequest() {
 	userId := "01J64V13D4AHZ61T4MD7Z53BVZ"
 	suite.GivenUserWithId(userId)
 
 	// Make http request
 	response := suite.executeJsonRequest(
-		http.MethodGet,
+		http.MethodDelete,
 		"/users/01J64V13D4AHZ61T4MD7Z53BVZ",
 		nil,
 		helpers.EmptyHeaders(),
 	)
 
-	// TODO: check the response body values
-	fmt.Println("==> Response Body: ", response.Body)
+	suite.checkResponseCode(http.StatusNoContent, response.Code)
 
-	suite.checkResponseCode(http.StatusOK, response.Code)
+	// TODO: check user not present in db
 }
