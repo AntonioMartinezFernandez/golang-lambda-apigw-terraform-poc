@@ -26,4 +26,6 @@ func RegisterBusHandlers(
 
 	// Register Commands
 	cb.Register(&user_application.SaveUserCommand{}, user_application.NewSaveUserCommandHandler(repositories.UserRepo, ulidProvider))
+	cb.Register(&user_application.UpdateUserCommand{}, user_application.NewUpdateUserCommandHandler(repositories.UserRepo))
+	cb.Register(&user_application.DeleteUserCommand{}, user_application.NewDeleteUserCommandHandler(repositories.UserRepo))
 }

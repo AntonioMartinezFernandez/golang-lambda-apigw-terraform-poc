@@ -87,6 +87,7 @@ func (dur *DynamoDbUserRepository) Delete(ctx context.Context, userId string) er
 	_, err := dur.dynamodbClient.DeleteItem(ctx, &dynamodb.DeleteItemInput{
 		Key: key, TableName: aws.String(tableName),
 	})
+
 	return err
 }
 

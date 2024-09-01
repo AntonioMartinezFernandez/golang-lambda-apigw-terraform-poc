@@ -15,9 +15,9 @@ import (
 	"github.com/google/jsonapi"
 )
 
-const createUserJsonSchema = "create-user.schema.json"
+const updateUserJsonSchema = "update-user.schema.json"
 
-func NewPostUserHandler(
+func NewPatchUserHandler(
 	commandBus bus.CommandBus,
 	responseMiddleware *http_middlewares.JsonApiResponseMiddleware,
 	jsonSchemaValidator json_schema.JsonSchemaValidator,
@@ -28,21 +28,21 @@ func NewPostUserHandler(
 		body, err := io.ReadAll(r.Body)
 
 		// Validate with JSON schema
-		jsr, jsrErr := jsonSchemaValidator.Validate(body, createUserJsonSchema)
+		jsr, jsrErr := jsonSchemaValidator.Validate(body, updateUserJsonSchema)
 		if !jsr.Valid() || jsrErr != nil {
 			responseMiddleware.WriteErrorResponse(w, http_middlewares.BadRequestJsonApiHttpResponse("invalid body"), http.StatusBadRequest, err)
 			return
 		}
 
 		// Unmarshall JSON to data struct
-		var u user_infra.CreateUserDto
+		var u user_infra.UpdateUserDto
 		if err := json.Unmarshal(body, &u); err != nil {
 			responseMiddleware.WriteErrorResponse(w, http_middlewares.BadRequestJsonApiHttpResponse("invalid body"), http.StatusBadRequest, err)
 			return
 		}
 
 		// Create command and publish to command bus
-		cmd := user_application.NewSaveUserCommand(u.Id, u.Name, u.Birthdate)
+		cmd := user_application.NewUpdateUserCommand(u.Id, u.Name, u.Birthdate)
 		cbErr := commandBus.Send(cmd)
 		if cbErr != nil {
 			responseMiddleware.WriteErrorResponse(w, []*jsonapi.ErrorObject{}, http.StatusInternalServerError, err)
@@ -50,6 +50,6 @@ func NewPostUserHandler(
 		}
 
 		// Http response
-		responseMiddleware.WriteResponse(w, nil, http.StatusCreated)
+		responseMiddleware.WriteResponse(w, nil, http.StatusNoContent)
 	}
 }

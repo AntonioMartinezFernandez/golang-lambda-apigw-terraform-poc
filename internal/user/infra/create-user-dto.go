@@ -1,6 +1,6 @@
 package user_infra
 
-type UserDto struct {
+type CreateUserDto struct {
 	Id        string `json:"id"`
 	Name      string `json:"name"`
 	Birthdate string `json:"birthdate"`
