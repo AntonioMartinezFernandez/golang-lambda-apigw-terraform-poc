@@ -1,6 +1,8 @@
 package user_domain
 
-import "time"
+import (
+	"time"
+)
 
 type User struct {
 	id        string
@@ -26,4 +28,13 @@ func (u *User) Name() string {
 
 func (u *User) Birthdate() time.Time {
 	return u.birthdate
+}
+
+func (u *User) Update(name *string, birthday *time.Time) {
+	if name != nil {
+		u.name = *name
+	}
+	if birthday != nil {
+		u.birthdate = *birthday
+	}
 }
