@@ -64,6 +64,32 @@ func (dur *DynamoDbUserRepository) Save(ctx context.Context, user user_domain.Us
 	return putItemErr
 }
 
+func (dur *DynamoDbUserRepository) Update(ctx context.Context, user user_domain.User) error {
+	u := UserDynamoDbModel{Id: user.Id(), Name: user.Name(), Birthdate: user.Birthdate().Format(time.RFC3339)}
+
+	item, err := attributevalue.MarshalMap(u)
+	if err != nil {
+		return err
+	}
+
+	_, putItemErr := dur.dynamodbClient.PutItem(ctx, &dynamodb.PutItemInput{
+		TableName: aws.String("users"), Item: item,
+	})
+	return putItemErr
+}
+
+func (dur *DynamoDbUserRepository) Delete(ctx context.Context, userId string) error {
+	userModel := UserDynamoDbModel{Id: userId}
+	key, kErr := userModel.GetKey()
+	if kErr != nil {
+		return kErr
+	}
+	_, err := dur.dynamodbClient.DeleteItem(ctx, &dynamodb.DeleteItemInput{
+		Key: key, TableName: aws.String(tableName),
+	})
+	return err
+}
+
 func parseUser(userModel UserDynamoDbModel) *user_domain.User {
 	birthdate, _ := time.Parse(time.RFC3339, userModel.Birthdate)
 	return user_domain.NewUser(
