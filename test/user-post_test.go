@@ -41,7 +41,7 @@ func (suite *SaveUserSuite) TestHandlePostUserRequest() {
 
 	response := suite.executeJsonRequest(
 		http.MethodPost,
-		"/user",
+		"/users",
 		[]byte(requestBody),
 		helpers.EmptyHeaders(),
 	)

@@ -33,7 +33,7 @@ func (suite *GetUserSuite) TestHandleGetUserRequest() {
 	// Make http request
 	response := suite.executeJsonRequest(
 		http.MethodGet,
-		"/user/01J64V13D4AHZ61T4MD7Z53BVZ",
+		"/users/01J64V13D4AHZ61T4MD7Z53BVZ",
 		nil,
 		helpers.EmptyHeaders(),
 	)
