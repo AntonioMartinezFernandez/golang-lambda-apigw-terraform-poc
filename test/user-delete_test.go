@@ -30,14 +30,13 @@ func (suite *DeleteUserSuite) TestHandleDeleteUserRequest() {
 	suite.GivenUserWithId(userId)
 
 	// Make http request
-	response := suite.executeJsonRequest(
+	response := suite.ExecuteJsonRequest(
 		http.MethodDelete,
 		"/users/01J64V13D4AHZ61T4MD7Z53BVZ",
 		nil,
 		helpers.EmptyHeaders(),
 	)
 
-	suite.checkResponseCode(http.StatusNoContent, response.Code)
-
-	// TODO: check user not present in db
+	suite.CheckResponseCode(http.StatusNoContent, response.Code)
+	suite.CheckUserNotExists(userId)
 }

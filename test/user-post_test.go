@@ -39,14 +39,13 @@ func (suite *SaveUserSuite) TestHandlePostUserRequest() {
 		userBirthdate,
 	)
 
-	response := suite.executeJsonRequest(
+	response := suite.ExecuteJsonRequest(
 		http.MethodPost,
 		"/users",
 		[]byte(requestBody),
 		helpers.EmptyHeaders(),
 	)
 
-	suite.checkResponse(http.StatusCreated, "", response)
-
-	// TODO: check user saved in db
+	suite.CheckResponseCode(http.StatusCreated, response.Code)
+	suite.CheckUserExists(userId)
 }
