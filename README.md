@@ -60,4 +60,4 @@ just start-local
 - [DynamoDB examples using SDK for Go V2](https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/gov2/dynamodb/actions)
 - [DynamoDB Table Terraform module](https://registry.terraform.io/modules/terraform-aws-modules/dynamodb-table/aws/latest)
 - [DynamoDB Hash Key (Partition Key -PK-) and Range Key (Sort Key -SK-)](https://stackoverflow.com/questions/27329461/what-is-hash-and-range-primary-key)
-- [Best Practices in API Design](https://swagger.io/resources/articles/best-practices-in-api-design/)
+- [Best practices for REST API design](https://stackoverflow.blog/2020/03/02/best-practices-for-rest-api-design/)
